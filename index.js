@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
 
+app.use(express.json())
+
 let persons = [
     {
         "name": "Arto Hellas",
@@ -50,7 +52,40 @@ app.delete('/api/persons/:id', (req, res) => {
     res.status(204).end()
 })
 
-const PORT = 3001
+// const generateId = () => {
+//     const maxId = persons.length > 0
+//         ? Math.max(...persons.map(p => p.id))
+//         : 0
+//     return maxId + 1
+// }
+
+// app.post('/api/persons', (req, res) => {
+//     const body = req.body
+
+//     if (!body.content) {
+//         return res.status(400).json({
+//             error: 'content missing'
+//         })
+//     }
+app.post('/api/persons', (req, res) => {
+    const person = req.body
+    console.log(person)
+
+    response.json(person)
+})
+
+// const person = {
+//     content: body.content,
+//     date: new Date(),
+//     id: generateId(),
+// }
+
+// persons = persons.concat(person)
+
+// res.json(person)
+// })
+
+const PORT = 0
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
