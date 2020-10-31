@@ -1,7 +1,14 @@
 const express = require('express')
+const morgan = require('morgan')
 const app = express()
 
 app.use(express.json())
+app.use(morgan('tiny', ':method :url :status :res[content-length] - :response-time ms'))
+
+// const unknownEndpoint = (req, res) => {
+//     res.status(404).send({ error: 'unknown endpoint' })
+// }
+
 
 let persons = [
     {
@@ -52,8 +59,6 @@ app.delete('/api/persons/:id', (req, res) => {
     res.status(204).end()
 })
 
-
-
 app.post('/api/persons', (req, res) => {
     const generateId = (max) =>
         Math.floor(Math.random() * Math.floor(max))
@@ -69,23 +74,25 @@ app.post('/api/persons', (req, res) => {
     if (!body.number) {
         return res.status(400).json({
             error: 'number missing'
-        });
+        })
     }
     if (persons.find(person => person.name === body.name)) {
         return res.status(400).json({
             error: 'name must be unique'
-        });
+        })
     }
 
     const person = {
         name: body.name,
         number: body.number,
         id: generateId(10000)
-    };
+    }
 
     persons = persons.concat(person);
     res.json(person);
-});
+})
+
+// app.use(unknownEndpoint)
 
 const PORT = 3001
 // Foroumā tika ierosināts listen neizmantot PORT, 
