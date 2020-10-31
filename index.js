@@ -52,40 +52,43 @@ app.delete('/api/persons/:id', (req, res) => {
     res.status(204).end()
 })
 
-// const generateId = () => {
-//     const maxId = persons.length > 0
-//         ? Math.max(...persons.map(p => p.id))
-//         : 0
-//     return maxId + 1
-// }
 
-// app.post('/api/persons', (req, res) => {
-//     const body = req.body
 
-//     if (!body.content) {
-//         return res.status(400).json({
-//             error: 'content missing'
-//         })
-//     }
 app.post('/api/persons', (req, res) => {
-    const person = req.body
-    console.log(person)
+    const generateId = (max) =>
+        Math.floor(Math.random() * Math.floor(max))
 
-    response.json(person)
-})
+    const body = req.body
 
-// const person = {
-//     content: body.content,
-//     date: new Date(),
-//     id: generateId(),
-// }
+    if (!body.name) {
+        return res.status(400).json({
+            error: 'name missing'
+        })
+    }
 
-// persons = persons.concat(person)
+    if (!body.number) {
+        return res.status(400).json({
+            error: 'number missing'
+        });
+    }
 
-// res.json(person)
-// })
+    const person = {
+        name: body.name,
+        number: body.number,
+        id: generateId(10000)
+    };
 
-const PORT = 0
+    persons = persons.concat(person);
+    res.json(person);
+});
+
+const PORT = 3001
+// Foroumā tika ierosināts listen neizmantot PORT, 
+// eksportēt tikai app, jo es nevarēju izmantot vienlaikus
+// yarn start un yarn dev -- ports vienmēr bija aizņemts,
+// lai ko es tur killotu, lai uz kādu portu mainītu.
+// izdevās palaist tad, kad es no šejiees v izdzēsu PORT,
+// un pēc tam atkal iekopēju atpakaļ. wut. #EADDRINUSE
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
