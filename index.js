@@ -3,7 +3,11 @@ const morgan = require('morgan')
 const app = express()
 
 app.use(express.json())
-app.use(morgan('tiny', ':method :url :status :res[content-length] - :response-time ms'))
+
+morgan.token('body', (req, res) => JSON.stringify(req.body))
+app.use(morgan(
+    ':method :url :status :res[content-length] - :response-time ms :body')
+)
 
 // const unknownEndpoint = (req, res) => {
 //     res.status(404).send({ error: 'unknown endpoint' })
@@ -38,7 +42,8 @@ app.get('/api/persons', (req, res) => {
 })
 
 app.get('/info', (req, res) => {
-    const message = `<p>Phonebook has info for ${persons.length} people</p><p>${new Date}</p>`
+    const message = `<p>Phonebook has info for ${persons.length} people</p>
+    <p>${new Date}</p>`
     res.send(message)
 })
 
@@ -95,12 +100,6 @@ app.post('/api/persons', (req, res) => {
 // app.use(unknownEndpoint)
 
 const PORT = 3001
-// Foroumā tika ierosināts listen neizmantot PORT, 
-// eksportēt tikai app, jo es nevarēju izmantot vienlaikus
-// yarn start un yarn dev -- ports vienmēr bija aizņemts,
-// lai ko es tur killotu, lai uz kādu portu mainītu.
-// izdevās palaist tad, kad es no šejiees v izdzēsu PORT,
-// un pēc tam atkal iekopēju atpakaļ. wut. #EADDRINUSE
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
