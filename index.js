@@ -1,6 +1,10 @@
+require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
+// const mongoose = require('mongoose')
+const Person = require('./models/person')
+
 const app = express()
 
 app.use(express.json())
@@ -11,11 +15,6 @@ morgan.token('body', (req, res) => JSON.stringify(req.body))
 app.use(morgan(
     ':method :url :status :res[content-length] - :response-time ms :body')
 )
-
-
-// const unknownEndpoint = (req, res) => {
-//     res.status(404).send({ error: 'unknown endpoint' })
-// }
 
 
 let persons = [
@@ -41,8 +40,11 @@ let persons = [
     }
 ]
 
+
 app.get('/api/persons', (req, res) => {
-    res.json(persons)
+    Person.find({}).then(persons => {
+        res.json(persons)
+    })
 })
 
 app.get('/info', (req, res) => {
@@ -52,13 +54,17 @@ app.get('/info', (req, res) => {
 })
 
 app.get('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id)
-    const person = persons.find(person => person.id === id)
-    if (person) {
-        res.json(person)
-    } else {
-        res.status(404).end()
-    }
+    Person.findById(req.params.id)
+        .then(person => {
+            res.json(person)
+        })
+    // const id = Number(req.params.id)
+    // const person = persons.find(person => person.id === id)
+    // if (person) {
+    //     res.json(person)
+    // } else {
+    //     res.status(404).end()
+    // }
 })
 
 app.delete('/api/persons/:id', (req, res) => {
@@ -91,19 +97,19 @@ app.post('/api/persons', (req, res) => {
         })
     }
 
-    const person = {
+    const person = new Person({
         name: body.name,
         number: body.number,
         id: generateId(10000)
-    }
-
-    persons = persons.concat(person);
-    res.json(person);
+    })
+    person.save().
+        then(savedPerson => {
+            res.json(savedPerson)
+        })
 })
 
-// app.use(unknownEndpoint)
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
