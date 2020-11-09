@@ -17,6 +17,16 @@ app.use(morgan(
     ':method :url :status :res[content-length] - :response-time ms :body')
 )
 
+// const requestLogger = (request, response, next) => {
+//     console.log('Method:', request.method)
+//     console.log('Path:  ', request.path)
+//     console.log('Body:  ', request.body)
+//     console.log('---')
+//     next()
+// }
+
+// app.use(requestLogger)
+
 
 let persons = [
     {
@@ -43,12 +53,10 @@ let persons = [
 
 
 app.get('/api/persons', (req, res) => {
-    Person.find({}).then(persons => {
-        console.log(find())
-        
-        res.json(persons)
-        console.log(persons)
-    })
+    Person.find({})
+        .then(persons => {
+            res.json(persons)
+        })
 })
 
 app.get('/info', (req, res) => {
@@ -72,6 +80,7 @@ app.get('/api/persons/:id', (req, res) => {
 })
 
 app.delete('/api/persons/:id', (req, res) => {
+    // Nez vai tagad ir Number
     const id = Number(req.params.id)
     persons = persons.filter(person => person.id !== id)
 
@@ -112,6 +121,12 @@ app.post('/api/persons', (req, res) => {
             res.json(savedPerson)
         })
 })
+
+// const unknownEndpoint = (request, response) => {
+//     response.status(404).send({ error: 'unknown endpoint' })
+// }
+
+// app.use(unknownEndpoint)
 
 
 const PORT = process.env.PORT
