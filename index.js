@@ -1,13 +1,15 @@
-require('dotenv').config()
+
 const express = require('express')
+const app = express()
+const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const cors = require('cors')
-// const mongoose = require('mongoose')
+require('dotenv').config()
 const Person = require('./models/person')
 
-const app = express()
 
-app.use(express.json())
+
+app.use(bodyParser.json())
 app.use(cors())
 app.use(express.static('build'))
 
@@ -54,8 +56,8 @@ let persons = [
 
 app.get('/api/persons', (req, res) => {
     Person.find({})
-        .then(persons => {
-            res.json(persons)
+        .then(result => {
+            response.json(result.map(contact => contact.toJSON()))
         })
 })
 
