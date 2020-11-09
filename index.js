@@ -76,8 +76,8 @@ app.delete('/api/persons/:id', (req, res) => {
 })
 
 app.post('/api/persons', (req, res) => {
-    const generateId = (max) =>
-        Math.floor(Math.random() * Math.floor(max))
+    // const generateId = (max) =>
+    //     Math.floor(Math.random() * Math.floor(max))
 
     const body = req.body
 
@@ -100,9 +100,10 @@ app.post('/api/persons', (req, res) => {
 
     const person = new Person({
         name: body.name,
-        number: body.number,
-        id: generateId(10000)
+        number: body.number
+        // id: generateId(10000)
     })
+
     person.save().
         then(savedPerson => {
             res.json(savedPerson)
