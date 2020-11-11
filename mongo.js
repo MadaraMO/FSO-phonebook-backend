@@ -8,7 +8,8 @@ const url =
 mongoose.connect(url,
     {
         useNewUrlParser: true,
-        useUnifiedTopology: true
+        useUnifiedTopology: true,
+        useFindAndModify: false
     })
 
 const personSchema = new mongoose.Schema({

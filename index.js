@@ -8,7 +8,7 @@ const cors = require('cors')
 const Person = require('./models/person')
 
 
-// tad kā? express.json() un/vai bodyParser?
+// tad kā? express.json() un/vai bodyParser? atkāpties un noskaidrot
 app.use(express.json())
 app.use(bodyParser.json())
 
@@ -23,10 +23,10 @@ app.use(morgan(
     ':method :url :status :res[content-length] - :response-time ms :body')
 )
 
-const requestLogger = (request, response, next) => {
-    console.log('Method:', request.method)
-    console.log('Path:  ', request.path)
-    console.log('Body:  ', request.body)
+const requestLogger = (req, res, next) => {
+    console.log('Method:', req.method)
+    console.log('Path:  ', req.path)
+    console.log('Body:  ', req.body)
     console.log('---')
     next()
 }
@@ -34,30 +34,30 @@ const requestLogger = (request, response, next) => {
 app.use(requestLogger)
 
 
-let persons = [
-    {
-        "name": "Arto Hellas",
-        "number": "040-123456",
-        "id": 1
-    },
-    {
-        "name": "Dan Abramov",
-        "number": "12-43-234345",
-        "id": 2
-    },
-    {
-        "name": "Mo Young",
-        "number": "123-429-3958",
-        "id": 3
-    },
-    {
-        "name": "Slavoj Zizek",
-        "number": "20-5872-4728",
-        "id": 4
-    }
-]
+// let persons = [
+//     {
+//         "name": "Arto Hellas",
+//         "number": "040-123456",
+//         "id": 1
+//     },
+//     {
+//         "name": "Dan Abramov",
+//         "number": "12-43-234345",
+//         "id": 2
+//     },
+//     {
+//         "name": "Mo Young",
+//         "number": "123-429-3958",
+//         "id": 3
+//     },
+//     {
+//         "name": "Slavoj Zizek",
+//         "number": "20-5872-4728",
+//         "id": 4
+//     }
+// ]
 
-
+// darbojas
 app.get('/api/persons', (req, res) => {
     console.log("entered /api/persons, finding all persons")
     Person.find({})
@@ -76,13 +76,15 @@ app.get('/api/persons', (req, res) => {
         })
 })
 
-
+// darbojas
 app.get('/info', (req, res) => {
-    const message = `<p>Phonebook has info for ${persons.length} people</p>
-    <p>${new Date}</p>`
-    res.send(message)
+    Person.find({}).then(result => {
+        res.send(`<p>Phonebook has info for ${result.length} people</p>
+    <p>${new Date}</p>`)
+    })
 })
 
+// darbojas
 app.get('/api/persons/:id', (req, res) => {
     Person.findById(req.params.id)
         .then(person => {
@@ -90,48 +92,46 @@ app.get('/api/persons/:id', (req, res) => {
         })
 })
 
+// darbojas
 app.delete('/api/persons/:id', (req, res) => {
-    // Nez vai tagad ir Number
-    // const id = Number(req.params.id)
-    // persons = persons.filter(person => person.id !== id)
-
-    // res.status(204).end()
-
-      // nope nope nope
-    // Person.findOneAndDelete(req.params.id)
-  
-    //     .then(result => {
-    //         res.status(204).end()
-    //     })
+    // de:57604) DeprecationWarning: Mongoose: `findOneAndUpdate()` and `findOneAndDelete()` without the 
+    // the`useFindAndModify` option set to false are deprecated.`
+    // mongo.js  ieliku useFindAndModify: false, brīdinājums turpinās
+    Person.findByIdAndRemove(req.params.id)
+    // .then() - .catch() - eh
+        .then(result => {
+            res.status(204).end()
+        })
 })
 
+// darbojas
 app.post('/api/persons', (req, res) => {
-    const generateId = (max) =>
-        Math.floor(Math.random() * Math.floor(max))
+    // const generateId = (max) =>
+    //     Math.floor(Math.random() * Math.floor(max))
 
     const body = req.body
 
-    if (!body.name) {
-        return res.status(400).json({
-            error: 'name missing'
-        })
-    }
+    // if (!body.name) {
+    //     return res.status(400).json({
+    //         error: 'name missing'
+    //     })
+    // }
 
-    if (!body.number) {
-        return res.status(400).json({
-            error: 'number missing'
-        })
-    }
-    if (persons.find(person => person.name === body.name)) {
-        return res.status(400).json({
-            error: 'name must be unique'
-        })
-    }
+    // if (!body.number) {
+    //     return res.status(400).json({
+    //         error: 'number missing'
+    //     })
+    // }
+    // if (persons.find(person => person.name === body.name)) {
+    //     return res.status(400).json({
+    //         error: 'name must be unique'
+    //     })
+    // }
 
     const person = new Person({
         name: body.name,
         number: body.number,
-        id: generateId(10000)
+        // id: generateId(10000)
     })
 
     person.save().
@@ -140,8 +140,8 @@ app.post('/api/persons', (req, res) => {
         })
 })
 
-const unknownEndpoint = (request, response) => {
-    response.status(404).send({ error: 'unknown endpoint' })
+const unknownEndpoint = (req, res) => {
+    res.status(404).send({ error: 'unknown endpoint' })
 }
 
 app.use(unknownEndpoint)
