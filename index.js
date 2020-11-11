@@ -61,11 +61,10 @@ let persons = [
 app.get('/api/persons', (req, res) => {
     console.log("entered /api/persons, finding all persons")
     Person.find({})
-    console.log(find())
         .then(result => {
             console.log("entered Person.find({}).then callback")
             console.log(`resolved persons ${JSON.stringify(result)}`)
-            
+            console.log(Person.find())
             res.json(result.map(person => person.toJSON()))
             console.log(person)
         })
@@ -73,21 +72,10 @@ app.get('/api/persons', (req, res) => {
         //     res.status(204).end()
         // })
         .catch((err) => {
-            res.status(404).end()
+            res.status(204).end()
         })
-
 })
 
-// app.get('/api/persons', (req, res) => {
-//     console.log("entered /api/persons, finding all persons")
-//     Person.find({}).then(persons => {
-//         console.log("entered Person.find({}).then callback")
-//         console.log(`resolved persons ${JSON.stringify(persons)}`) // <-- JSON.stringify, jo Node mēdz slikti formatēt logus, ja dod objektus
-//         console.log(find())
-//         res.json(persons)
-//         console.log(persons)
-//     })
-// })
 
 app.get('/info', (req, res) => {
     const message = `<p>Phonebook has info for ${persons.length} people</p>
@@ -100,13 +88,6 @@ app.get('/api/persons/:id', (req, res) => {
         .then(person => {
             res.json(person)
         })
-    // const id = Number(req.params.id)
-    // const person = persons.find(person => person.id === id)
-    // if (person) {
-    //     res.json(person)
-    // } else {
-    //     res.status(404).end()
-    // }
 })
 
 app.delete('/api/persons/:id', (req, res) => {
@@ -115,7 +96,10 @@ app.delete('/api/persons/:id', (req, res) => {
     // persons = persons.filter(person => person.id !== id)
 
     // res.status(204).end()
+
+      // nope nope nope
     // Person.findOneAndDelete(req.params.id)
+  
     //     .then(result => {
     //         res.status(204).end()
     //     })
