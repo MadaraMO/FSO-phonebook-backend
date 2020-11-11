@@ -2,15 +2,13 @@ const mongoose = require('mongoose')
 
 const password = process.argv[2]
 
-// const url =
-//     `mongodb+srv://mad_mad_mad:${password}@cluster0.pln8b.mongodb.net/phonebook-app?retryWrites=true&w=majority`
+const url =
+    `mongodb+srv://mad_mad_mad:${password}@cluster0.pln8b.mongodb.net/phonebook-app?retryWrites=true&w=majority`
 
-mongoose.connect(url, 
-    { 
-        useNewUrlParser: true, 
-        useUnifiedTopology: true, 
-        useFindAndModify: false, 
-        useCreateIndex: true 
+mongoose.connect(url,
+    {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
     })
 
 const personSchema = new mongoose.Schema({

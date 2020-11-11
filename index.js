@@ -1,17 +1,21 @@
 
+require('dotenv').config()
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const cors = require('cors')
-require('dotenv').config()
 const Person = require('./models/person')
 
 
-
+// tad kā? express.json() un/vai bodyParser?
+app.use(express.json())
 app.use(bodyParser.json())
+
+
 app.use(cors())
 app.use(express.static('build'))
+
 
 morgan.token('body', (req, res) => JSON.stringify(req.body))
 
@@ -19,15 +23,15 @@ app.use(morgan(
     ':method :url :status :res[content-length] - :response-time ms :body')
 )
 
-// const requestLogger = (request, response, next) => {
-//     console.log('Method:', request.method)
-//     console.log('Path:  ', request.path)
-//     console.log('Body:  ', request.body)
-//     console.log('---')
-//     next()
-// }
+const requestLogger = (request, response, next) => {
+    console.log('Method:', request.method)
+    console.log('Path:  ', request.path)
+    console.log('Body:  ', request.body)
+    console.log('---')
+    next()
+}
 
-// app.use(requestLogger)
+app.use(requestLogger)
 
 
 let persons = [
@@ -55,11 +59,35 @@ let persons = [
 
 
 app.get('/api/persons', (req, res) => {
+    console.log("entered /api/persons, finding all persons")
     Person.find({})
+    console.log(find())
         .then(result => {
-            response.json(result.map(contact => contact.toJSON()))
+            console.log("entered Person.find({}).then callback")
+            console.log(`resolved persons ${JSON.stringify(result)}`)
+            
+            res.json(result.map(person => person.toJSON()))
+            console.log(person)
         })
+        // .then(result => {
+        //     res.status(204).end()
+        // })
+        .catch((err) => {
+            res.status(404).end()
+        })
+
 })
+
+// app.get('/api/persons', (req, res) => {
+//     console.log("entered /api/persons, finding all persons")
+//     Person.find({}).then(persons => {
+//         console.log("entered Person.find({}).then callback")
+//         console.log(`resolved persons ${JSON.stringify(persons)}`) // <-- JSON.stringify, jo Node mēdz slikti formatēt logus, ja dod objektus
+//         console.log(find())
+//         res.json(persons)
+//         console.log(persons)
+//     })
+// })
 
 app.get('/info', (req, res) => {
     const message = `<p>Phonebook has info for ${persons.length} people</p>
@@ -83,15 +111,19 @@ app.get('/api/persons/:id', (req, res) => {
 
 app.delete('/api/persons/:id', (req, res) => {
     // Nez vai tagad ir Number
-    const id = Number(req.params.id)
-    persons = persons.filter(person => person.id !== id)
+    // const id = Number(req.params.id)
+    // persons = persons.filter(person => person.id !== id)
 
-    res.status(204).end()
+    // res.status(204).end()
+    // Person.findOneAndDelete(req.params.id)
+    //     .then(result => {
+    //         res.status(204).end()
+    //     })
 })
 
 app.post('/api/persons', (req, res) => {
-    // const generateId = (max) =>
-    //     Math.floor(Math.random() * Math.floor(max))
+    const generateId = (max) =>
+        Math.floor(Math.random() * Math.floor(max))
 
     const body = req.body
 
@@ -114,8 +146,8 @@ app.post('/api/persons', (req, res) => {
 
     const person = new Person({
         name: body.name,
-        number: body.number
-        // id: generateId(10000)
+        number: body.number,
+        id: generateId(10000)
     })
 
     person.save().
@@ -124,11 +156,11 @@ app.post('/api/persons', (req, res) => {
         })
 })
 
-// const unknownEndpoint = (request, response) => {
-//     response.status(404).send({ error: 'unknown endpoint' })
-// }
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: 'unknown endpoint' })
+}
 
-// app.use(unknownEndpoint)
+app.use(unknownEndpoint)
 
 
 const PORT = process.env.PORT
