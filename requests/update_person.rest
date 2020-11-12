@@ -1,0 +1,7 @@
+PUT http://localhost:3001/api/persons/5fac065f6946a7def427be78
+Content-Type: application/json
+
+{
+        "name": "Armageddon",
+        "number": 4830-28383
+    }
