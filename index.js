@@ -71,7 +71,7 @@ app.get('/api/persons', (req, res) => {
         // .then(result => {
         //     res.status(204).end()
         // })
-        .catch((err) => {
+        .catch((error) => {
             res.status(204).end()
         })
 })
@@ -85,23 +85,28 @@ app.get('/info', (req, res) => {
 })
 
 // darbojas
-app.get('/api/persons/:id', (req, res) => {
+app.get('/api/persons/:id', (req, res, next) => {
     Person.findById(req.params.id)
         .then(person => {
-            res.json(person)
+            if (person) {
+                res.json(person)
+            } else {
+                res.status(404).end()
+            }
         })
+        .catch(error => next(error))
 })
 
 // darbojas
-app.delete('/api/persons/:id', (req, res) => {
+app.delete('/api/persons/:id', (req, res, next) => {
     // de:57604) DeprecationWarning: Mongoose: `findOneAndUpdate()` and `findOneAndDelete()` without the 
     // the`useFindAndModify` option set to false are deprecated.`
     // mongo.js  ieliku useFindAndModify: false, brīdinājums turpinās
     Person.findByIdAndRemove(req.params.id)
-    // .then() - .catch() - eh
         .then(result => {
             res.status(204).end()
         })
+        .catch(error => next(error))
 })
 
 // darbojas
@@ -140,12 +145,39 @@ app.post('/api/persons', (req, res) => {
         })
 })
 
+app.put('/api/persons/:id', (req, res, next) => {
+    const body = req.body
+
+    const person = {
+        name: body.name,
+        number: body.number,
+    }
+
+    Person.findByIdAndUpdate(req.params.id, person, { new: true })
+        .then(updatedPerson => {
+            res.json(updatedPerson)
+        })
+        .catch(error => next(error))
+})
+
 const unknownEndpoint = (req, res) => {
     res.status(404).send({ error: 'unknown endpoint' })
 }
 
 app.use(unknownEndpoint)
 
+
+const errorHandler = (error, req, res, next) => {
+    console.error(error.message)
+
+    if (error.name === 'CastError' && error.kind == 'ObjectId') {
+        return res.status(400).send({ error: 'malformatted id' })
+    }
+
+    next(error)
+}
+
+app.use(errorHandler)
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
