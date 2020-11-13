@@ -17,6 +17,7 @@ app.use(cors())
 app.use(express.static('build'))
 
 
+// eslint-disable-next-line no-unused-vars
 morgan.token('body', (req, res) => JSON.stringify(req.body))
 
 app.use(morgan(
@@ -59,18 +60,19 @@ app.use(requestLogger)
 
 // darbojas
 app.get('/api/persons', (req, res) => {
-    console.log("entered /api/persons, finding all persons")
+    console.log('entered /api/persons, finding all persons')
     Person.find({})
         .then(result => {
-            console.log("entered Person.find({}).then callback")
+            console.log('entered Person.find({}).then callback')
             console.log(`resolved persons ${JSON.stringify(result)}`)
             console.log(Person.find())
             res.json(result.map(person => person.toJSON()))
-            console.log(person)
+            // console.log(person)
         })
         // .then(result => {
         //     res.status(204).end()
         // })
+        // eslint-disable-next-line no-unused-vars
         .catch((error) => {
             res.status(204).end()
         })
@@ -99,10 +101,11 @@ app.get('/api/persons/:id', (req, res, next) => {
 
 // darbojas
 app.delete('/api/persons/:id', (req, res, next) => {
-    // de:57604) DeprecationWarning: Mongoose: `findOneAndUpdate()` and `findOneAndDelete()` without the 
+    // de:57604) DeprecationWarning: Mongoose: `findOneAndUpdate()` and `findOneAndDelete()` without the
     // the`useFindAndModify` option set to false are deprecated.`
     // mongo.js  ieliku useFindAndModify: false, brīdinājums turpinās
     Person.findByIdAndRemove(req.params.id)
+        // eslint-disable-next-line no-unused-vars
         .then(result => {
             res.status(204).end()
         })
@@ -171,6 +174,7 @@ app.use(unknownEndpoint)
 const errorHandler = (error, req, res, next) => {
     console.error(error.message)
 
+    // eslint-disable-next-line eqeqeq
     if (error.name === 'CastError' && error.kind == 'ObjectId') {
         return res.status(400).send({ error: 'malformatted id' })
     } else if (error.name === 'ValidationError') {
