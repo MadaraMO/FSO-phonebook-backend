@@ -20,9 +20,7 @@ app.use(express.static('build'))
 // eslint-disable-next-line no-unused-vars
 morgan.token('body', (req, res) => JSON.stringify(req.body))
 
-app.use(morgan(
-    ':method :url :status :res[content-length] - :response-time ms :body')
-)
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
 const requestLogger = (req, res, next) => {
     console.log('Method:', req.method)
