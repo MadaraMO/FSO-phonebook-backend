@@ -99,9 +99,6 @@ app.get('/api/persons/:id', (req, res, next) => {
 
 // darbojas
 app.delete('/api/persons/:id', (req, res, next) => {
-    // de:57604) DeprecationWarning: Mongoose: `findOneAndUpdate()` and `findOneAndDelete()` without the
-    // the`useFindAndModify` option set to false are deprecated.`
-    // mongo.js  ieliku useFindAndModify: false, brīdinājums turpinās
     Person.findByIdAndRemove(req.params.id)
         // eslint-disable-next-line no-unused-vars
         .then(result => {
@@ -155,7 +152,7 @@ app.put('/api/persons/:id', (req, res, next) => {
         number: body.number,
     }
 
-    Person.findByIdAndUpdate(req.params.id, person, { new: true }, { runValidators: true, context: 'query' })
+    Person.findByIdAndUpdate(req.params.id, person, { new: true })
         .then(updatedPerson => {
             res.json(updatedPerson)
         })

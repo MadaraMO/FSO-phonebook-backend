@@ -7,7 +7,7 @@
     "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:ui": "rm -rf build && cd /Users/madaraklavinska/FSO/part2/phonebook/ && yarn build --prod && cp -r build /Users/madaraklavinska/FSO-phonebook-backend",
-    "deploy": "git push heroku main:HEAD",
+    "deploy": "git push heroku main",
     "deploy:full": "yarn build:ui && git add . && git commit -m uibuild && yarn deploy",
     "logs:prod": "heroku logs --tail",
     "lint": "eslint ."
