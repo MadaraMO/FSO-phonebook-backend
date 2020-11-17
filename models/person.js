@@ -13,7 +13,6 @@ mongoose.connect(url,
         useFindAndModify: false,
         useCreateIndex: true
     })
-    // eslint-disable-next-line no-unused-vars
     .then(result => {
         console.log('connected to MongoDB')
     })
