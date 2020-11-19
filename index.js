@@ -97,12 +97,12 @@ app.put('/api/persons/:id', (req, res, next) => {
         name: body.name,
         number: body.number,
     }
-    console.log('This is person.name', JSON.stringify(person.name))
-    console.log('This is person', JSON.stringify(person))
-    // const opts = { runValidators: true, new: true, context: 'query', setDefaultsOnInsert: true, upsert: true, }
+    // console.log('This is person.name', JSON.stringify(person.name))
+    // console.log('This is person', JSON.stringify(person))
+    const opts = { runValidators: true, new: true, context: 'query' }
+    // console.log('This is req.params.id', JSON.stringify(req.params.id))
 
-    Person.findByIdAndUpdate(req.params._id, person)
-    console.log('This is req.params.id', JSON.stringify(req.params.id))
+    Person.findByIdAndUpdate(req.params.id, person, opts)
         .then(updatedPerson => {
 
             res.json(updatedPerson)
