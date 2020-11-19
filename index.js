@@ -90,17 +90,21 @@ app.post('/api/persons', (req, res, next) => {
 })
 
 app.put('/api/persons/:id', (req, res, next) => {
-    // const body = req.body
+    console.log('entered person, finding person id')
+    const body = req.body
+    console.log('This is req.body', JSON.stringify(req.body))
+    const person = {
+        name: body.name,
+        number: body.number,
+    }
+    console.log('This is person.name', JSON.stringify(person.name))
+    console.log('This is person', JSON.stringify(person))
+    // const opts = { runValidators: true, new: true, context: 'query', setDefaultsOnInsert: true, upsert: true, }
 
-    // const person = {
-    //     name: body.name,
-    //     number: body.number,
-    // }
-    const { name, number } = req.body
-    const opts = { runValidators: true }
-    // { new: true } opts vietā
-    Person.findByIdAndUpdate(req.params.id, { name, number }, opts)
+    Person.findByIdAndUpdate(req.params._id, person)
+    console.log('This is req.params.id', JSON.stringify(req.params.id))
         .then(updatedPerson => {
+
             res.json(updatedPerson)
         })
         .catch(error => next(error))
