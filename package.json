@@ -10,7 +10,8 @@
     "deploy": "git push heroku main:HEAD",
     "deploy:full": "yarn build:ui && git add . && git commit -m uibuild && yarn deploy",
     "logs:prod": "heroku logs --tail",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "fix-js": "eslint-auto-fix"
   },
   "author": "Madara",
   "license": "MIT",

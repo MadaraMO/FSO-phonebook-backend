@@ -29,12 +29,8 @@ app.use(requestLogger)
 
 
 app.get('/api/persons', (req, res) => {
-    console.log('entered /api/persons, finding all persons')
     Person.find({})
         .then(result => {
-            console.log('entered Person.find({}).then callback')
-            console.log(`resolved persons ${JSON.stringify(result)}`)
-            console.log(Person.find())
             res.json(result.map(person => person.toJSON()))
         })
         .catch((error) => {
@@ -90,17 +86,15 @@ app.post('/api/persons', (req, res, next) => {
 })
 
 app.put('/api/persons/:id', (req, res, next) => {
-    console.log('entered person, finding person id')
+
     const body = req.body
-    console.log('This is req.body', JSON.stringify(req.body))
     const person = {
         name: body.name,
         number: body.number,
     }
-    // console.log('This is person.name', JSON.stringify(person.name))
-    // console.log('This is person', JSON.stringify(person))
+
     const opts = { runValidators: true, new: true, context: 'query' }
-    // console.log('This is req.params.id', JSON.stringify(req.params.id))
+
 
     Person.findByIdAndUpdate(req.params.id, person, opts)
         .then(updatedPerson => {
@@ -120,7 +114,7 @@ app.use(unknownEndpoint)
 const errorHandler = (error, req, res, next) => {
     console.error(error.message)
 
-    if (error.name === 'CastError' && error.kind == 'ObjectId') {
+    if (error.name === 'CastError' && error.kind === 'ObjectId') {
         return res.status(400).send({ error: 'malformatted id' })
     } else if (error.name === 'ValidationError') {
         return res.status(400).json({ error: error.message })

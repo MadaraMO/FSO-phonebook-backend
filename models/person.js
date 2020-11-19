@@ -24,7 +24,7 @@ const personSchema = new mongoose.Schema({
 
     name: {
         type: String,
-        // unique: true,
+        unique: true,
         minlength: 3,
         required: true
     },
@@ -36,7 +36,7 @@ const personSchema = new mongoose.Schema({
     date: Date
 })
 
-// personSchema.plugin(uniqueValidator)
+personSchema.plugin(uniqueValidator)
 
 personSchema.set('toJSON', {
     transform: (document, returnedObject) => {

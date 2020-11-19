@@ -9,7 +9,7 @@ module.exports = {
         'ecmaVersion': 12
     },
     'rules': {
-        // 'eqeqeq': 'error',
+        'eqeqeq': 'error',
         'no-unused-vars': 'off',
         'no-trailing-spaces': 'error',
         'object-curly-spacing': [
