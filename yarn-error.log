@@ -1,5 +1,5 @@
 Arguments: 
-  /usr/local/Cellar/node/14.11.0/bin/node /usr/local/Cellar/yarn/1.22.5/libexec/bin/yarn.js deploy
+  /usr/local/Cellar/node/14.11.0/bin/node /usr/local/Cellar/yarn/1.22.5/libexec/bin/yarn.js add body-parcer
 
 PATH: 
   /usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin
@@ -14,12 +14,17 @@ Platform:
   darwin x64
 
 Trace: 
-  SyntaxError: /Users/madaraklavinska/FSO-phonebook-backend/package.json: Unexpected token / in JSON at position 206
-      at JSON.parse (<anonymous>)
-      at /usr/local/Cellar/yarn/1.22.5/libexec/lib/cli.js:1625:59
-      at Generator.next (<anonymous>)
-      at step (/usr/local/Cellar/yarn/1.22.5/libexec/lib/cli.js:310:30)
-      at /usr/local/Cellar/yarn/1.22.5/libexec/lib/cli.js:321:13
+  Error: https://registry.yarnpkg.com/body-parcer: Not found
+      at Request.params.callback [as _callback] (/usr/local/Cellar/yarn/1.22.5/libexec/lib/cli.js:66988:18)
+      at Request.self.callback (/usr/local/Cellar/yarn/1.22.5/libexec/lib/cli.js:140749:22)
+      at Request.emit (events.js:314:20)
+      at Request.<anonymous> (/usr/local/Cellar/yarn/1.22.5/libexec/lib/cli.js:141721:10)
+      at Request.emit (events.js:314:20)
+      at IncomingMessage.<anonymous> (/usr/local/Cellar/yarn/1.22.5/libexec/lib/cli.js:141643:12)
+      at Object.onceWrapper (events.js:420:28)
+      at IncomingMessage.emit (events.js:326:22)
+      at endReadableNT (_stream_readable.js:1252:12)
+      at processTicksAndRejections (internal/process/task_queues.js:80:21)
 
 npm manifest: 
   {
@@ -30,7 +35,7 @@ npm manifest:
       "start": "node index.js",
       "dev": "nodemon index.js",
       "test": "echo \"Error: no test specified\" && exit 1",
-      // "build:ui": "rm -rf build /Users/madaraklavinska/FSO/part2/phonebook && cd  && yarn build --prod && cp -r build /Users/madaraklavinska/FSO-phonebook-backend",
+      "build:ui": "rm -rf build && cd /Users/madaraklavinska/FSO/part2/phonebook/ && yarn build --prod && cp -r build /Users/madaraklavinska/FSO-phonebook-backend",
       "deploy": "git push heroku main",
       "deploy:full": "yarn build:ui && git add . && git commit -m uibuild && yarn deploy",
       "logs:prod": "heroku logs --tail"
